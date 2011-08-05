@@ -1,6 +1,8 @@
 package com.RACustomMain.UI;
 
 import java.awt.EventQueue;
+
+import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
@@ -13,12 +15,18 @@ import java.awt.event.MouseEvent;
 import javax.swing.JLabel;
 import java.awt.SystemColor;
 import com.RACustomMain.Classes.*;
+
 import java.awt.event.MouseAdapter;
 import javax.swing.border.BevelBorder;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
+import javax.swing.ImageIcon;
+import java.awt.Font;
+import javax.swing.JTextField;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 
 public class MainForm extends JFrame {
@@ -26,9 +34,11 @@ public class MainForm extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-    private JPanel pnlScreen;
-    private JLabel lblT1Huge;    
-    
+    private ScreenPanel pnlScreen;
+    private JButton lblT1Huge;    
+    private static JLabel lblScreenCoords;
+ 
+    JButton btnNewButton_1;
 	/**
 	 * Launch the application.
 	 */
@@ -49,28 +59,28 @@ public class MainForm extends JFrame {
 	 * Create the frame.
 	 */
 	public MainForm() {
+
+		setResizable(false);
+		setMinimumSize(new Dimension(520, 440));
+		setPreferredSize(new Dimension(520, 440));
+		setMaximumSize(new Dimension(525, 445));
 		setTitle("RAGen Custom Main");
 		
 	
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 519, 441);
+		setBounds(100, 100, 498, 464);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		ToolTipManager.sharedInstance().setInitialDelay(0);
-		pnlScreen = new ScreenPanel();
-		pnlScreen.setBorder(new LineBorder(new Color(0, 0, 0)));
-		pnlScreen.setBounds(106, 49, 128, 128);
-		contentPane.add(pnlScreen);
-		pnlScreen.setLayout(null);
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.setAlignmentX(Component.LEFT_ALIGNMENT);
-		panel_1.setBorder(new BevelBorder(BevelBorder.RAISED, SystemColor.controlShadow, null, null, null));
-		panel_1.setBounds(10, 286, 466, 98);
-		contentPane.add(panel_1);
-		panel_1.setLayout(null);
+		JPanel pnlPreBuiltItems = new JPanel();
+		pnlPreBuiltItems.setAlignmentX(Component.LEFT_ALIGNMENT);
+		pnlPreBuiltItems.setBorder(new BevelBorder(BevelBorder.RAISED, SystemColor.controlShadow, null, null, null));
+		pnlPreBuiltItems.setBounds(10, 327, 466, 98);
+		contentPane.add(pnlPreBuiltItems);
+		pnlPreBuiltItems.setLayout(null);
 		
 	
 		
@@ -84,9 +94,9 @@ public class MainForm extends JFrame {
 		lblT1Huge.setBounds(7, 7, Globals.HugeControlWidth, Globals.HugeControlHeight);		
 		lblT1Huge.setPreferredSize(new Dimension(Globals.HugeControlWidth, Globals.HugeControlHeight));
 		lblT1Huge.setToolTipText("Temp1 Huge 16x16");		
-		panel_1.add(lblT1Huge);
+		pnlPreBuiltItems.add(lblT1Huge);
 		
-		JLabel lblT1Large = new ScreenItem();
+		JButton lblT1Large = new ScreenItem();
 		lblT1Large.setHorizontalAlignment(SwingConstants.CENTER);
 		lblT1Large.setBounds(17, 36, Globals.LargeControlWidth, Globals.LargeControlHeight);
 		lblT1Large.setOpaque(true);
@@ -96,10 +106,10 @@ public class MainForm extends JFrame {
 		lblT1Large.setText("T1");
 		lblT1Large.setPreferredSize(new Dimension(Globals.LargeControlWidth, Globals.LargeControlHeight));
 		lblT1Large.setToolTipText("Temp1 Large 8x16");		
-		panel_1.add(lblT1Large);
+		pnlPreBuiltItems.add(lblT1Large);
 		
 		
-		JLabel lblT1Normal= new ScreenItem();
+		JButton lblT1Normal= new ScreenItem();
 		lblT1Normal.setHorizontalAlignment(SwingConstants.CENTER);
 		lblT1Normal.setBounds(27, 65, Globals.NormalControlWidth, Globals.NormalControlHeight);
 		lblT1Normal.setOpaque(true);
@@ -109,10 +119,10 @@ public class MainForm extends JFrame {
 		lblT1Normal.setText("T1");
 		lblT1Normal.setPreferredSize(new Dimension(Globals.NormalControlWidth, Globals.NormalControlHeight));
 		lblT1Normal.setToolTipText("Temp1 Normal 8x8");
-		panel_1.add(lblT1Normal);
+		pnlPreBuiltItems.add(lblT1Normal);
 		
 		
-		JLabel lblT2Huge = new ScreenItem();
+		JButton lblT2Huge = new ScreenItem();
 		lblT2Huge.setOpaque(true);
 		lblT2Huge.setBackground(Globals.HugeControlBGColor);
 		lblT2Huge.setHorizontalAlignment(SwingConstants.CENTER);
@@ -122,9 +132,9 @@ public class MainForm extends JFrame {
 		lblT2Huge.setBounds(83, 7, Globals.HugeControlWidth, Globals.HugeControlHeight);		
 		lblT2Huge.setPreferredSize(new Dimension(Globals.HugeControlWidth, Globals.HugeControlHeight));
 		lblT2Huge.setToolTipText("Temp2 Huge 16x16");		
-		panel_1.add(lblT2Huge);
+		pnlPreBuiltItems.add(lblT2Huge);
 		
-		JLabel lblT2Large = new ScreenItem();
+		JButton lblT2Large = new ScreenItem();
 		lblT2Large.setHorizontalAlignment(SwingConstants.CENTER);
 		lblT2Large.setBounds(93, 36, Globals.LargeControlWidth, Globals.LargeControlHeight);
 		lblT2Large.setOpaque(true);
@@ -134,10 +144,10 @@ public class MainForm extends JFrame {
 		lblT2Large.setText("T2");
 		lblT2Large.setPreferredSize(new Dimension(Globals.LargeControlWidth, Globals.LargeControlHeight));
 		lblT2Large.setToolTipText("Temp2 Large 8x16");		
-		panel_1.add(lblT2Large);
+		pnlPreBuiltItems.add(lblT2Large);
 		
 		
-		JLabel lblT2Normal= new ScreenItem();
+		JButton lblT2Normal= new ScreenItem();
 		lblT2Normal.setHorizontalAlignment(SwingConstants.CENTER);
 		lblT2Normal.setBounds(103, 65, Globals.NormalControlWidth, Globals.NormalControlHeight);
 		lblT2Normal.setOpaque(true);
@@ -147,10 +157,10 @@ public class MainForm extends JFrame {
 		lblT2Normal.setText("T2");
 		lblT2Normal.setPreferredSize(new Dimension(Globals.NormalControlWidth, Globals.NormalControlHeight));
 		lblT2Normal.setToolTipText("Temp2 Normal 8x8");
-		panel_1.add(lblT2Normal);
+		pnlPreBuiltItems.add(lblT2Normal);
 				
 	
-		JLabel lblT3Huge = new ScreenItem();
+		JButton lblT3Huge = new ScreenItem();
 		lblT3Huge.setOpaque(true);
 		lblT3Huge.setBackground(Globals.HugeControlBGColor);
 		lblT3Huge.setHorizontalAlignment(SwingConstants.CENTER);
@@ -160,9 +170,9 @@ public class MainForm extends JFrame {
 		lblT3Huge.setBounds(159, 7, Globals.HugeControlWidth, Globals.HugeControlHeight);		
 		lblT3Huge.setPreferredSize(new Dimension(Globals.HugeControlWidth, Globals.HugeControlHeight));
 		lblT3Huge.setToolTipText("Temp3 Huge 16x16");		
-		panel_1.add(lblT3Huge);
+		pnlPreBuiltItems.add(lblT3Huge);
 		
-		JLabel lblT3Large = new ScreenItem();
+		JButton lblT3Large = new ScreenItem();
 		lblT3Large.setHorizontalAlignment(SwingConstants.CENTER);
 		lblT3Large.setBounds(169, 36, 46, 18);
 		lblT3Large.setOpaque(true);
@@ -172,10 +182,10 @@ public class MainForm extends JFrame {
 		lblT3Large.setText("T3");
 		lblT3Large.setPreferredSize(new Dimension(Globals.LargeControlWidth, Globals.LargeControlHeight));
 		lblT3Large.setToolTipText("Temp3 Large 8x16");		
-		panel_1.add(lblT3Large);
+		pnlPreBuiltItems.add(lblT3Large);
 		
 		
-		JLabel lblT3Normal= new ScreenItem();
+		JButton lblT3Normal= new ScreenItem();
 		lblT3Normal.setHorizontalAlignment(SwingConstants.CENTER);
 		lblT3Normal.setBounds(179, 65, 26, 10);
 		lblT3Normal.setOpaque(true);
@@ -185,11 +195,11 @@ public class MainForm extends JFrame {
 		lblT3Normal.setText("T3");
 		lblT3Normal.setPreferredSize(new Dimension(Globals.NormalControlWidth, Globals.NormalControlHeight));
 		lblT3Normal.setToolTipText("Temp3 Normal 8x8");
-		panel_1.add(lblT3Normal);
+		pnlPreBuiltItems.add(lblT3Normal);
 		
 		
 		
-		JLabel lblPhHuge = new ScreenItem();
+		JButton lblPhHuge = new ScreenItem();
 		lblPhHuge.setOpaque(true);
 		lblPhHuge.setBackground(Globals.HugeControlBGColor);
 		lblPhHuge.setHorizontalAlignment(SwingConstants.CENTER);
@@ -199,9 +209,9 @@ public class MainForm extends JFrame {
 		lblPhHuge.setBounds(235, 7, Globals.HugeControlWidth, Globals.HugeControlHeight);		
 		lblPhHuge.setPreferredSize(new Dimension(Globals.HugeControlWidth, Globals.HugeControlHeight));
 		lblPhHuge.setToolTipText("pH Huge 16x16");		
-		panel_1.add(lblPhHuge);
+		pnlPreBuiltItems.add(lblPhHuge);
 		
-		JLabel lblPhLarge = new ScreenItem();
+		JButton lblPhLarge = new ScreenItem();
 		lblPhLarge.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPhLarge.setBounds(245, 36,Globals.LargeControlWidth, Globals.LargeControlHeight);
 		lblPhLarge.setOpaque(true);
@@ -211,10 +221,10 @@ public class MainForm extends JFrame {
 		lblPhLarge.setText("pH");
 		lblPhLarge.setPreferredSize(new Dimension(Globals.LargeControlWidth, Globals.LargeControlHeight));
 		lblPhLarge.setToolTipText("pH Large 8x16");		
-		panel_1.add(lblPhLarge);
+		pnlPreBuiltItems.add(lblPhLarge);
 		
 		
-		JLabel lblPhNormal= new ScreenItem();
+		JButton lblPhNormal= new ScreenItem();
 		lblPhNormal.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPhNormal.setBounds(255, 65, Globals.NormalControlWidth, Globals.NormalControlHeight);
 		lblPhNormal.setOpaque(true);
@@ -224,23 +234,23 @@ public class MainForm extends JFrame {
 		lblPhNormal.setText("pH");
 		lblPhNormal.setPreferredSize(new Dimension(Globals.NormalControlWidth, Globals.NormalControlHeight));
 		lblPhNormal.setToolTipText("pH Normal 8x8");
-		panel_1.add(lblPhNormal);
+		pnlPreBuiltItems.add(lblPhNormal);
 		
 		
 		
 		
+		JPanel pnlProperties = new PropertiesPanel();
+		pnlProperties.setBorder(new LineBorder(new Color(0, 0, 0)));
+		pnlProperties.setBounds(348, 31, 128, 264);
+		pnlProperties.setLayout(null);
+		
+		contentPane.add(pnlProperties);
 		
 		
 		
-		JPanel panel_2 = new JPanel();
-		panel_2.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_2.setBounds(317, 11, 159, 264);
-		contentPane.add(panel_2);
-		
-		JLabel lblReservedForScreenitem = new JLabel("ScreenItem Properties Here");
-		panel_2.add(lblReservedForScreenitem);
 		
 		JButton btnClear = new JButton("Clear");
+		btnClear.setBorder(new LineBorder(new Color(255, 0, 0)));
 		btnClear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				pnlScreen.removeAll();
@@ -253,8 +263,40 @@ public class MainForm extends JFrame {
 				
 			}
 		});
-		btnClear.setBounds(126, 198, 89, 23);
+		btnClear.setBounds(165, 285, 89, 23);
 		contentPane.add(btnClear);
 		
+		JLabel lblRAHeader = new JLabel("");
+		lblRAHeader.setHorizontalAlignment(SwingConstants.CENTER);
+		lblRAHeader.setIcon(new ImageIcon(MainForm.class.getResource("/images/RAHeader.png")));
+		lblRAHeader.setBounds(10, 11, 298, 86);
+		contentPane.add(lblRAHeader);
+		
+		JButton btnNewButton = new JButton("Generate");
+		btnNewButton.setBorder(new LineBorder(new Color(0, 255, 0)));
+		btnNewButton.setBounds(66, 285, 89, 23);
+		contentPane.add(btnNewButton);
+		
+		lblScreenCoords = new JLabel("");
+		lblScreenCoords.setBounds(37, 133, 46, 14);
+		contentPane.add(lblScreenCoords);
+		
+		JPanel pnlScreenHolder = new JPanel();
+		pnlScreenHolder.setBackground(new Color(0, 123, 149));
+		pnlScreenHolder.setBounds(93, 108, 137, 137);
+		contentPane.add(pnlScreenHolder);
+		pnlScreenHolder.setLayout(null);
+		pnlScreen = new ScreenPanel();
+		pnlScreen.setBounds(4, 4, 129, 129);
+		pnlScreenHolder.add(pnlScreen);
+		pnlScreen.setBorder(new LineBorder(new Color(0, 123, 149), 0));
+		pnlScreen.setLayout(null);
+		pnlScreen.setPropertiesPanel((PropertiesPanel)pnlProperties);
+	}	
+	
+
+	public static void clearScreenCoords()
+	{
+		lblScreenCoords.setText("");
 	}
 }
