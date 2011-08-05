@@ -8,10 +8,12 @@ import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.DragGestureListener;
 import java.awt.dnd.DragSource;
+
+import javax.swing.JButton;
 import javax.swing.JLabel;
 
 
-public class ScreenItem extends JLabel implements IScreenItem, Transferable, DragGestureListener
+public class ScreenItem extends JButton implements IScreenItem, Transferable, DragGestureListener
 {
 		
 	private static final long serialVersionUID = 1L;
