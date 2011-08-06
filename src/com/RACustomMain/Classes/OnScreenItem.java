@@ -1,73 +1,103 @@
 package com.RACustomMain.Classes;
 
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
-
-
-
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.LineBorder;
 import javax.swing.event.MouseInputAdapter;
-
 import com.RACustomMain.UI.MainForm;
-
 
 public class OnScreenItem extends JButton implements IScreenItem{
 
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	protected int prevX, prevY, currX, currY;
-	MoveIconHandler mouseHandler;
-	//FocusHandler focusHandler;
+	MoveIconHandler mouseHandler;	
 	Border origBorder;
 	ScreenPanel parentPanel;
-	PropertiesPanel propPanel;
+	PropertiesPanel propPanel;	
+	ControlType thisControlType;	
+
 	public OnScreenItem(JPanel parent, JPanel propertiesPanel)
 	{
-		mouseHandler = new MoveIconHandler();
-		//focusHandler = new FocusHandler();
-		
+		mouseHandler = new MoveIconHandler();		
 		this.addMouseListener(mouseHandler);
 		this.addMouseMotionListener(mouseHandler);
-		//this.addFocusListener(focusHandler);
+		
 		parentPanel = (ScreenPanel) parent;	
 		this.propPanel = (PropertiesPanel)propertiesPanel;
+		this.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent arg0) {//Handles the backspace event
+				if(arg0.getKeyCode() == 127)				
+				{
+					RemoveThisItem();
+					return;
+				}
+				else if(arg0.getKeyCode() == 38)//Up arrow
+					OnScreenItem.this.SetYCoordinate(OnScreenItem.this.currY -1);
+				else if(arg0.getKeyCode()==40)//down arrow
+					OnScreenItem.this.SetYCoordinate(OnScreenItem.this.currY + 1);
+				else if(arg0.getKeyCode()==37)//left arrow
+					OnScreenItem.this.SetXCoordinate(OnScreenItem.this.currX -1);
+				else if(arg0.getKeyCode() == 39)//right arrow
+					OnScreenItem.this.SetXCoordinate(OnScreenItem.this.currX +1);
+				propPanel.SetScreenCoords(OnScreenItem.this.currX,OnScreenItem.this.currY);
+			}
+		});
 	}
 	
-	public void SetLocation(int x, int y) throws OutOfBoundsException
+	public void setControlType(ControlType t)
+	{
+		thisControlType = t;
+	}
+	public ControlType getControlType()
+	{
+		return thisControlType;
+	}
+	
+	private void RemoveThisItem()
+	{
+		parentPanel.remove(this);		
+		parentPanel.repaint();
+		propPanel.activeScreenItem = null;
+		propPanel.SetScreenCoords(-1,-1);
+		if(this instanceof IOutletBox)
+			propPanel.ToggleOutletProperties(false);
+	}
+	
+	public void SetXCoordinate(int x)
 	{
 		if(x < 0)
 			x = 0;
 		if(x + this.getBounds().width > 129)
 			x = 129-this.getBounds().width;
+		
+		currX= x;
+		this.setLocation(x, currY);
+	}
+	public void SetYCoordinate(int y)
+	{		
 		if(y < 0)
 			y = 0;
 		if(y + this.getBounds().height > 129)
 			y = 129-this.getBounds().height;
-		
-		this.setLocation(currX, currY);
+		currY = y;
+		this.setLocation(currX, y);
 	}
+	
 	
 	public void SelectThisItem()
 	{
 		origBorder = this.getBorder();
-		this.setBorder(Globals.SelectedItemBorder);
-		
-		propPanel.SetScreenCoords(this.getX(), this.getY());
+		this.setBorder(Globals.SelectedItemBorder);				
+		propPanel.SetActiveItem(this);				
+		propPanel.ToggleOutletProperties(this instanceof IOutletBox);
 	}
+	
 	public void DeselectThisItem()
 	{
 		if(origBorder != null)
@@ -86,6 +116,7 @@ public class OnScreenItem extends JButton implements IScreenItem{
 			prevY = e.getY();			
 			parentPanel.DeselectAllItems();
 			SelectThisItem();
+			
 		}
 		public void mouseDragged(MouseEvent e)
 		{
@@ -103,8 +134,7 @@ public class OnScreenItem extends JButton implements IScreenItem{
 				currY = 129-c.getBounds().height;
 			
 			c.setLocation(currX, currY);
-			OnScreenItem.this.propPanel.SetScreenCoords(currX, currY);
-			
+			OnScreenItem.this.propPanel.SetScreenCoords(currX, currY);			
 		}
 	}
 }

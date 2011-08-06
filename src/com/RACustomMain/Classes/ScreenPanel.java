@@ -13,6 +13,8 @@ import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
 import javax.swing.event.MouseInputAdapter;
+
+import com.RACustomMain.Classes.IScreenItem.ControlType;
 @SuppressWarnings("unused")
 public class ScreenPanel extends JPanel
 {			
@@ -26,6 +28,7 @@ public class ScreenPanel extends JPanel
 		mAdapter = new MouseHandler();
 		this.setBackground(SystemColor.inactiveCaption);
 		this.addMouseMotionListener(mAdapter);		
+		this.addMouseListener(mAdapter);
 		new ScreenDropTargetListener(this);			
 	}
 	
@@ -46,6 +49,13 @@ public class ScreenPanel extends JPanel
 		this.propPanel = value;
 	}
 	
+	public void ClearItems()
+	{
+		this.removeAll();
+		if(getPropertiesPanel() != null)
+			getPropertiesPanel().SetScreenCoords(-1,-1);
+		this.repaint();
+	}
 	
 	class MouseHandler extends MouseInputAdapter
 	{
@@ -53,6 +63,10 @@ public class ScreenPanel extends JPanel
 		{
 			ScreenPanel.this.setToolTipText(e.getX()+"," + e.getY());			
 		}		
+		public void mousePressed(MouseEvent e)
+		{
+			ScreenPanel.this.requestFocus();
+		}
 	}
 	
 	class ScreenDropTargetListener extends DropTargetAdapter
@@ -79,9 +93,15 @@ public class ScreenPanel extends JPanel
 		            {
 		              evnt.acceptDrop(DnDConstants.ACTION_COPY);
 		              
-		              OnScreenItem itemToPlace = new OnScreenItem(pnl,ScreenPanel.this.getPropertiesPanel());
+		              OnScreenItem itemToPlace;
+		              if(item.getControlType() == ControlType.Outlet)
+		            	  itemToPlace = new OutletBoxScreenItem(pnl, ScreenPanel.this.getPropertiesPanel());
+		              else
+		            	  itemToPlace = new OnScreenItem(pnl,ScreenPanel.this.getPropertiesPanel());
 		              itemToPlace.setText(item.getText());
 		              itemToPlace.setBackground(item.getBackground());
+		              if(item.getIcon() != null)
+		            	  itemToPlace.setIcon(item.getIcon());
 		              itemToPlace.setOpaque(item.isOpaque());
 		              itemToPlace.setBorder(item.getBorder());
 		              itemToPlace.setHorizontalAlignment(item.getHorizontalAlignment());
@@ -89,11 +109,15 @@ public class ScreenPanel extends JPanel
 		              itemToPlace.setBounds(evnt.getLocation().x, evnt.getLocation().y, item.getWidth(), item.getHeight());
 		              itemToPlace.currX = evnt.getLocation().x;
 		              itemToPlace.currY = evnt.getLocation().y;
+		              itemToPlace.setControlType(item.getControlType());
 		              itemToPlace.setPreferredSize(new Dimension(item.getWidth(), item.getHeight()));
 		              pnl.add(itemToPlace);
+		              itemToPlace.requestFocus();
 		              pnl.repaint();
-		              (pnl).DeselectAllItems();
+		              (pnl).DeselectAllItems();		              
 		              itemToPlace.SelectThisItem();
+		              itemToPlace.SetXCoordinate(evnt.getLocation().x);
+		              itemToPlace.SetYCoordinate(evnt.getLocation().y);
 		              return;		              
 		            }
 		          evnt.rejectDrop();

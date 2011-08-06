@@ -1,11 +1,20 @@
 package com.RACustomMain.Classes;
 
-import java.awt.Point;
 
-public interface IScreenItem 
+public interface IScreenItem
 {
 
-	Point screenLoc = new Point();	
-	String definition = "";	
+	enum ControlType
+	{
+		Monitor,
+		MultiMonitor,
+		Outlet,
+		DateTime,
+		PreBuiltItem
+		
+	}
 	
+	void setControlType(ControlType t);
+	ControlType getControlType();
+
 }

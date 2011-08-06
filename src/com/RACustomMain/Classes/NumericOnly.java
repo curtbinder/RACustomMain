@@ -6,12 +6,25 @@ import javax.swing.text.PlainDocument;
 
 public class NumericOnly {
 
+	OnScreenItem itemBeingModified;
+	String xory = "";
 	public NumericOnly() {
 	
+	}
+	
+	public NumericOnly(String XorY)
+	{
+		xory = XorY;
+	}
+	
+	public void SetOnScreenItem(OnScreenItem item)
+	{
+		itemBeingModified = item;
 	}
 		
 	public PlainDocument getOnlyNumber() 
 	{	
+		@SuppressWarnings("serial")
 		PlainDocument filterNumber = new PlainDocument() 
 		{	
 			@Override	
@@ -30,7 +43,14 @@ public class NumericOnly {
 					}	
 				}	
 				buffer.append(dataInput, 0, s);	
-				super.insertString(offs, new String(buffer), a);	
+				super.insertString(offs, new String(buffer), a);
+				if(itemBeingModified != null && xory != "")
+				{
+					if(xory == "x")
+						itemBeingModified.SetXCoordinate(Integer.parseInt(super.getText(0, super.getLength())));
+					else if (xory == "y") 
+						itemBeingModified.SetYCoordinate(Integer.parseInt(super.getText(0,super.getLength())));					
+				}
 			}	
 		};	
 		return filterNumber;	
