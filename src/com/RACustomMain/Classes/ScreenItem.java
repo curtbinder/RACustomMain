@@ -8,10 +8,7 @@ import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.DragGestureListener;
 import java.awt.dnd.DragSource;
-
 import javax.swing.JButton;
-import javax.swing.JLabel;
-
 
 public class ScreenItem extends JButton implements IScreenItem, Transferable, DragGestureListener
 {
@@ -21,12 +18,23 @@ public class ScreenItem extends JButton implements IScreenItem, Transferable, Dr
 	protected static DataFlavor[] acceptedFlavors = {screenItemFlavor};
 	
 	DragSource ds = new DragSource();
+	ControlType thisControlType;
 	
 	public ScreenItem()
 	{		
 		ds.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_COPY,this);
 	}
 
+	//IScreenItem implementation methods
+	public void setControlType(ControlType t)
+	{
+		thisControlType = t;
+	}
+	public ControlType getControlType()
+	{
+		return thisControlType;
+	}
+	
 	
 	//Transferable implementation methods
 	@Override
